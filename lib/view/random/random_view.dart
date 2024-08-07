@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
@@ -15,6 +15,16 @@ class _RandomViewState extends State<RandomView> {
   List<String> pathList = [];
   String path = '';
   bool isLoading = true;
+  int shakeCount = 0;
+  int backCount = 0;
+  Timer? timer;
+  bool isShakeCountFinished = false;
+  Map<String, String> mode = {
+    'init': 'init',
+    'next': 'next',
+    'back': 'back',
+  };
+  List<String> sessionPath = [];
 
   Future<void> getImages() async {
     try {
@@ -34,14 +44,36 @@ class _RandomViewState extends State<RandomView> {
     }
   }
 
-  void getRandomImagePath() {
+  void getRandomImagePath(String changeMode) {
     final random = Random();
+    int randomIndex = 0;
     try {
-      int randomIndex = 0;
       randomIndex = random.nextInt(pathList.length);
-      setState(() {
-        path = pathList[randomIndex];
-      });
+      switch (changeMode) {
+        case "init":
+          sessionPath.insert(0, pathList[randomIndex]);
+          setState(() {
+            path = sessionPath[0];
+          });
+          break;
+        case "next":
+          pathList.remove(sessionPath[0]);
+          setState(() {
+            backCount = 0;
+            path = pathList[(randomIndex - 1).abs()];
+          });
+          pathList.add(sessionPath[0]);
+          sessionPath.insert(0, path);
+          break;
+        case "back":
+          setState(() {
+            backCount++;
+            path = sessionPath[2 * backCount - 1];
+          });
+          sessionPath.insert(0, path);
+          break;
+        default:
+      }
       isLoading = false;
     } catch (e) {
       isLoading = false;
@@ -54,28 +86,60 @@ class _RandomViewState extends State<RandomView> {
     getImages();
     ShakeDetector.autoStart(
       onPhoneShake: () {
-        getRandomImagePath();
+        setState(() {
+          isShakeCountFinished = true;
+          shakeCount++;
+        });
+        timer?.cancel();
+        timer = Timer(const Duration(seconds: 1), () {
+          if (shakeCount > 1) {
+            getRandomImagePath(mode['back'].toString());
+          } else {
+            getRandomImagePath(mode['next'].toString());
+          }
+          setState(() {
+            shakeCount = 0;
+          });
+        });
       },
       minimumShakeCount: 1,
       shakeSlopTimeMS: 500,
-      shakeCountResetTime: 500,
       shakeThresholdGravity: 1.3,
     );
   }
 
   @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    getRandomImagePath();
+    if (!isShakeCountFinished) {
+      getRandomImagePath(mode['init'].toString());
+    }
     return Scaffold(
-        body: isLoading || path.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: AssetImage(path),
-                  fit: BoxFit.cover,
-                )),
-                child: const Center(),
-              ));
+      body: isLoading || path.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: AssetImage(path),
+                fit: BoxFit.cover,
+              )),
+              child: Center(
+                  child: shakeCount > 0
+                      ? Text(
+                          shakeCount.toString(),
+                          style: const TextStyle(
+                            fontSize: 50,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : Container()),
+            ),
+    );
   }
 }
