@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stable_gallery/config/firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stable_gallery/view/home/home.dart';
+import 'package:stable_gallery/view/museum/museum_view.dart';
+import 'package:stable_gallery/view/random/random_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,8 @@ class StableGallery extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
+        '/random': (context) => const RandomView(),
+        '/museum': (context) => const MuseumView(),
       },
       debugShowCheckedModeBanner: false,
     );

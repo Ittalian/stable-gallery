@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   firebase_core: ^3.3.0
   cloud_firestore: ^5.2.0
+  shake: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +71,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - images/
+      - images/other/
+      - images/museum/
+      - images/music/
+      - images/restaurant/
+      - images/smartphone/
+      - images/study/
+      - images/train/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

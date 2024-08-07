@@ -24,30 +24,43 @@ class _HomeState extends State<Home> {
         child: Scaffold(
             backgroundColor: Colors.white.withOpacity(0),
             body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  alignment: Alignment.center,
-                  child: ElevatedButton.icon(
-                    onPressed: () => const Navigation().moveHomePage,
-                    icon: const Icon(Icons.roundabout_right_outlined),
-                    label: Text(
-                      randomText,
-                      style: const TextStyle(
-                        fontSize: 20,
+                  margin: const EdgeInsets.only(bottom: 10),
+                    alignment: Alignment.center,
+                    child: ElevatedButton.icon(
+                      onPressed: () => const Navigation().moveRandomView(context),
+                      icon: const Icon(Icons.roundabout_right_outlined),
+                      label: Text(
+                        randomText,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
                       ),
-                    ))),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[100],
+                        iconColor: Colors.black,
+                      ),
+                    )),
                 Container(
-                  alignment: Alignment.center,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.museum),
-                    onPressed: () => const Navigation().moveHomePage,
-                    label: Text(
-                      museumText,
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                    )))
+                  margin: const EdgeInsets.only(bottom: 30),
+                    alignment: Alignment.center,
+                    child: ElevatedButton.icon(
+                        icon: const Icon(Icons.museum),
+                        onPressed: () => const Navigation().moveMuseumView(context),
+                        label: Text(
+                          museumText,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber[400],
+                          iconColor: Colors.black,
+                        ),))
               ],
             )));
   }
