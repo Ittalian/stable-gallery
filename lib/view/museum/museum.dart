@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stable_gallery/models/navigation.dart';
 import 'package:stable_gallery/view/museum/frame_picture.dart';
 import 'package:stable_gallery/view/museum/title_label.dart';
 
@@ -23,7 +24,9 @@ class Museum extends StatelessWidget {
               for (var driveId in driveIds ?? [])
                 Container(
                     margin: const EdgeInsets.only(bottom: 20),
-                    child: FramePicture(driveId: driveId)),
+                    child: GestureDetector(
+                      onTap: () => const Navigation().movePictureView(context, driveId),
+                      child: FramePicture(driveId: driveId))),
             ])),
       backgroundColor: Colors.white.withOpacity(0.5),
     );

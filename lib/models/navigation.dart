@@ -14,4 +14,8 @@ class Navigation {
   void moveMuseumView(BuildContext context) {
     Navigator.pushNamed(context, '/museum');
   }
+
+  void movePictureView(BuildContext context, String driveId) {
+    Navigator.of(context).pushNamed('/picture', arguments: driveId);
+  }
 }

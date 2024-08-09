@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stable_gallery/config/firebase_options.dart';
 import 'package:stable_gallery/view/home/home.dart';
 import 'package:stable_gallery/view/museum/museum_view.dart';
+import 'package:stable_gallery/view/picture/picture.dart';
 import 'package:stable_gallery/view/random/random_view.dart';
 
 void main() async {
@@ -24,6 +25,14 @@ class StableGallery extends StatelessWidget {
         '/': (context) => const Home(),
         '/random': (context) => const RandomView(),
         '/museum': (context) => const MuseumView(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/picture') {
+          return MaterialPageRoute(
+              builder: (context) =>
+                  Picture(driveId: settings.arguments.toString()));
+        }
+        return null;
       },
       debugShowCheckedModeBanner: false,
     );
