@@ -12,7 +12,8 @@ class Picture extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0),
-      body: Center(
+      body: InteractiveViewer(
+        maxScale: 3.5,
         child: GestureDetector(
           onTap: () {
             Navigator.pop(context);

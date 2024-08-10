@@ -168,65 +168,69 @@ class _RandomViewState extends State<RandomView> {
     return Scaffold(
       body: isLoading || imageInfo.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : GestureDetector(
-              onTapDown: (_) {
-                categoryDetailNotifier.value = 'カテゴリ: ${categoryTitles[imageInfo['category']]}';
-                appNameDetailNotifier.value = '使用アプリ: ${imageInfo['app_name']}';
-              },
-              onTapUp: (_) {
-                appNameDetailNotifier.value = '';
-                categoryDetailNotifier.value = '';
-              },
-              onTapCancel: () {
-                appNameDetailNotifier.value = '';
-                categoryDetailNotifier.value = '';
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: NetworkImage(getDriveUrl(imageInfo['drive_id'])),
-                  fit: BoxFit.cover,
-                )),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                          child: shakeCount > 0
-                              ? Text(
-                                  shakeCount.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 50,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : Container()),
-                      ValueListenableBuilder(
-                        valueListenable: categoryDetailNotifier,
-                        builder: (context, value, child) {
-                          return Text(
-                            value,
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white),
-                          );
-                        },
-                      ),
-                      ValueListenableBuilder(
-                        valueListenable: appNameDetailNotifier,
-                        builder: (context, value, child) {
-                          return Text(
-                            value,
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white),
-                          );
-                        },
-                      ),
-                    ]),
-              )),
+          : InteractiveViewer(
+              maxScale: 3.5,
+              child: GestureDetector(
+                  onTapDown: (_) {
+                    categoryDetailNotifier.value =
+                        'カテゴリ: ${categoryTitles[imageInfo['category']]}';
+                    appNameDetailNotifier.value =
+                        '使用アプリ: ${imageInfo['app_name']}';
+                  },
+                  onTapUp: (_) {
+                    appNameDetailNotifier.value = '';
+                    categoryDetailNotifier.value = '';
+                  },
+                  onTapCancel: () {
+                    appNameDetailNotifier.value = '';
+                    categoryDetailNotifier.value = '';
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                      image: NetworkImage(getDriveUrl(imageInfo['drive_id'])),
+                      fit: BoxFit.cover,
+                    )),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                              child: shakeCount > 0
+                                  ? Text(
+                                      shakeCount.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 50,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : Container()),
+                          ValueListenableBuilder(
+                            valueListenable: categoryDetailNotifier,
+                            builder: (context, value, child) {
+                              return Text(
+                                value,
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white),
+                              );
+                            },
+                          ),
+                          ValueListenableBuilder(
+                            valueListenable: appNameDetailNotifier,
+                            builder: (context, value, child) {
+                              return Text(
+                                value,
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white),
+                              );
+                            },
+                          ),
+                        ]),
+                  ))),
     );
   }
 }
