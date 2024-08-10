@@ -18,7 +18,7 @@ class FramePicture extends StatelessWidget {
           height: 350,
           fit: BoxFit.fill,
         ),
-        const Text("読み込み中...", style: TextStyle(fontWeight: FontWeight.w900),),
+        const CircularProgressIndicator(),
         Image.network(
           getDriveUrl(driveId),
           width: 150,

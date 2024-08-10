@@ -26,7 +26,9 @@ class Museum extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 20),
                     child: GestureDetector(
                       onTap: () => const Navigation().movePictureView(context, driveId),
-                      child: FramePicture(driveId: driveId))),
+                      child: Hero(
+                        tag: driveId,
+                        child: FramePicture(driveId: driveId)))),
             ])),
       backgroundColor: Colors.white.withOpacity(0.5),
     );
