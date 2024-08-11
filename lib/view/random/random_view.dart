@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 import 'package:stable_gallery/models/message.dart';
 import 'package:stable_gallery/models/navigation.dart';
-import 'package:stable_gallery/view/constants/categories.dart';
+import 'package:stable_gallery/view/constants/category_titles.dart';
 import 'package:stable_gallery/view/constants/inform_message.dart';
+import 'package:stable_gallery/view/constants/mode.dart';
 
 class RandomView extends StatefulWidget {
   const RandomView({super.key});
@@ -27,11 +28,6 @@ class _RandomViewState extends State<RandomView> {
   int backCount = 0;
   Timer? timer;
   bool isShakeCountFinished = false;
-  Map<String, String> mode = {
-    'init': 'init',
-    'next': 'next',
-    'back': 'back',
-  };
   List<Map<String, dynamic>> sessionimageInfoList = [];
   final ValueNotifier<String> appNameDetailNotifier = ValueNotifier<String>("");
   final ValueNotifier<String> categoryDetailNotifier =

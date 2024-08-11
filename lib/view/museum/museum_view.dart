@@ -4,6 +4,7 @@ import 'package:stable_gallery/models/message.dart';
 import 'package:stable_gallery/models/navigation.dart';
 import 'package:stable_gallery/view/constants/inform_message.dart';
 import 'package:stable_gallery/view/museum/museum.dart';
+import '../constants/category_titles.dart';
 import '../constants/categories.dart';
 
 class MuseumView extends StatefulWidget {
@@ -14,7 +15,7 @@ class MuseumView extends StatefulWidget {
 }
 
 class _MuseumViewState extends State<MuseumView> {
-  Map<String, List<String>> classifiedPathLists = {
+  Map<String, List<String>> classifiedDriveIdss = {
     'museum': [],
     'music': [],
     'other': [],
@@ -36,7 +37,7 @@ class _MuseumViewState extends State<MuseumView> {
 
   getCategoryPath(String category) async {
     await getCategoryId(category);
-    List<String> pathList = await FirebaseFirestore.instance
+    List<String> driveIds = await FirebaseFirestore.instance
         .collection('Picture')
         .where('category_id', isEqualTo: categoryIds[category])
         .get()
@@ -47,7 +48,7 @@ class _MuseumViewState extends State<MuseumView> {
       }).toList();
     });
     setState(() {
-      classifiedPathLists[category] = pathList;
+      classifiedDriveIdss[category] = driveIds;
     });
   }
 
@@ -73,7 +74,8 @@ class _MuseumViewState extends State<MuseumView> {
         isLoading = false;
       });
     } catch (e) {
-      Message(message: errorMessage['databaseError'].toString()).informAction(context);
+      Message(message: errorMessage['databaseError'].toString())
+          .informAction(context);
       const Navigation().moveHomePage(context);
     }
   }
@@ -99,25 +101,25 @@ class _MuseumViewState extends State<MuseumView> {
               child: PageView(children: [
                 Museum(
                     title: categoryTitles['museum'].toString(),
-                    driveIds: classifiedPathLists['museum']),
+                    driveIds: classifiedDriveIdss['museum']),
                 Museum(
                     title: categoryTitles['music'].toString(),
-                    driveIds: classifiedPathLists['music']),
+                    driveIds: classifiedDriveIdss['music']),
                 Museum(
                     title: categoryTitles['restaurant'].toString(),
-                    driveIds: classifiedPathLists['restaurant']),
+                    driveIds: classifiedDriveIdss['restaurant']),
                 Museum(
                     title: categoryTitles['smartphone'].toString(),
-                    driveIds: classifiedPathLists['smartphone']),
+                    driveIds: classifiedDriveIdss['smartphone']),
                 Museum(
                     title: categoryTitles['study'].toString(),
-                    driveIds: classifiedPathLists['study']),
+                    driveIds: classifiedDriveIdss['study']),
                 Museum(
                     title: categoryTitles['train'].toString(),
-                    driveIds: classifiedPathLists['train']),
+                    driveIds: classifiedDriveIdss['train']),
                 Museum(
                     title: categoryTitles['other'].toString(),
-                    driveIds: classifiedPathLists['other']),
+                    driveIds: classifiedDriveIdss['other']),
               ]),
             ),
           );
