@@ -5,5 +5,8 @@ const Map<String, String> categoryTitles = {
   'train': '車掌の格好をしている女性',
   'smartphone': 'スマホを持っている女性',
   'study': '勉強をしている女性',
+  'store room': '倉庫にいる女性',
+  'floating noteboooks': 'ノートが舞っている',
+  'disney': '遊園地でカチューシャをしている女性',
   'other': '有象無象たち',
 };
