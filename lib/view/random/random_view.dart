@@ -3,7 +3,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
-import 'package:stable_gallery/view/museum/constants/categories.dart';
+import 'package:stable_gallery/models/message.dart';
+import 'package:stable_gallery/models/navigation.dart';
+import 'package:stable_gallery/view/constants/categories.dart';
+import 'package:stable_gallery/view/constants/inform_message.dart';
 
 class RandomView extends StatefulWidget {
   const RandomView({super.key});
@@ -81,9 +84,9 @@ class _RandomViewState extends State<RandomView> {
         isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      Message(message: errorMessage['databaseError'].toString())
+          .informAction(context);
+      const Navigation().moveHomePage(context);
     }
   }
 
@@ -118,7 +121,11 @@ class _RandomViewState extends State<RandomView> {
             break;
           default:
         }
-      } catch (e) {}
+      } catch (e) {
+        Message(message: errorMessage['driveError'].toString())
+            .informAction(context);
+        const Navigation().moveHomePage(context);
+      }
     }
   }
 

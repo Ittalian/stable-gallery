@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:stable_gallery/models/message.dart';
+import 'package:stable_gallery/models/navigation.dart';
+import 'package:stable_gallery/view/constants/inform_message.dart';
 import 'package:stable_gallery/view/museum/museum.dart';
-import 'constants/categories.dart';
+import '../constants/categories.dart';
 
 class MuseumView extends StatefulWidget {
   const MuseumView({super.key});
@@ -66,9 +69,12 @@ class _MuseumViewState extends State<MuseumView> {
       for (var category in categories) {
         await getCategoryPath(category);
       }
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
     } catch (e) {
-      isLoading = false;
+      Message(message: errorMessage['databaseError'].toString()).informAction(context);
+      const Navigation().moveHomePage(context);
     }
   }
 
@@ -91,13 +97,27 @@ class _MuseumViewState extends State<MuseumView> {
                 ),
               ),
               child: PageView(children: [
-                Museum(title: categoryTitles['museum'].toString(), driveIds: classifiedPathLists['museum']),
-                Museum(title: categoryTitles['music'].toString(), driveIds: classifiedPathLists['music']),
-                Museum(title: categoryTitles['restaurant'].toString(), driveIds: classifiedPathLists['restaurant']),
-                Museum(title: categoryTitles['smartphone'].toString(), driveIds: classifiedPathLists['smartphone']),
-                Museum(title: categoryTitles['study'].toString(), driveIds: classifiedPathLists['study']),
-                Museum(title: categoryTitles['train'].toString(), driveIds: classifiedPathLists['train']),
-                Museum(title: categoryTitles['other'].toString(), driveIds: classifiedPathLists['other']),
+                Museum(
+                    title: categoryTitles['museum'].toString(),
+                    driveIds: classifiedPathLists['museum']),
+                Museum(
+                    title: categoryTitles['music'].toString(),
+                    driveIds: classifiedPathLists['music']),
+                Museum(
+                    title: categoryTitles['restaurant'].toString(),
+                    driveIds: classifiedPathLists['restaurant']),
+                Museum(
+                    title: categoryTitles['smartphone'].toString(),
+                    driveIds: classifiedPathLists['smartphone']),
+                Museum(
+                    title: categoryTitles['study'].toString(),
+                    driveIds: classifiedPathLists['study']),
+                Museum(
+                    title: categoryTitles['train'].toString(),
+                    driveIds: classifiedPathLists['train']),
+                Museum(
+                    title: categoryTitles['other'].toString(),
+                    driveIds: classifiedPathLists['other']),
               ]),
             ),
           );
