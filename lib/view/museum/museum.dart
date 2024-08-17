@@ -12,11 +12,14 @@ class Museum extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: driveIds!.isEmpty
-          ? const Center(
-              child: Text(
-              "画像はありません",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-            ))
+          ? Stack(children: [
+              TitleLabel(title: title),
+              const Center(
+                  child: Text(
+                "画像はありません",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+              ))
+            ])
           : SingleChildScrollView(
               child: Column(children: [
               TitleLabel(title: title),
@@ -25,10 +28,11 @@ class Museum extends StatelessWidget {
                 Container(
                     margin: const EdgeInsets.only(bottom: 20),
                     child: GestureDetector(
-                      onTap: () => const Navigation().movePictureView(context, driveId),
-                      child: Hero(
-                        tag: driveId,
-                        child: FramePicture(driveId: driveId)))),
+                        onTap: () => const Navigation()
+                            .movePictureView(context, driveId),
+                        child: Hero(
+                            tag: driveId,
+                            child: FramePicture(driveId: driveId)))),
             ])),
       backgroundColor: Colors.white.withOpacity(0.5),
     );

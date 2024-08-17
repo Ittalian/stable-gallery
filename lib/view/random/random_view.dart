@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 import 'package:stable_gallery/models/message.dart';
 import 'package:stable_gallery/models/navigation.dart';
-import 'package:stable_gallery/view/constants/category_titles.dart';
 import 'package:stable_gallery/view/constants/inform_message.dart';
 import 'package:stable_gallery/view/constants/mode.dart';
 
@@ -50,13 +49,13 @@ class _RandomViewState extends State<RandomView> {
             .get();
 
         final categoryData = categorySnapshot.data()! as Map<String, dynamic>;
-        final String category = categoryData['name'];
+        final String categoryValue = categoryData['value'];
 
         if (usedAppId.isEmpty) {
           resultList.add({
             'drive_id': driveId,
             'app_name': "なし",
-            'category': category,
+            'category': categoryValue,
           });
           continue;
         }
@@ -72,7 +71,7 @@ class _RandomViewState extends State<RandomView> {
         resultList.add({
           'drive_id': driveId,
           'app_name': appName,
-          'category': category,
+          'category': categoryValue,
         });
       }
       setState(() {
@@ -176,7 +175,7 @@ class _RandomViewState extends State<RandomView> {
               child: GestureDetector(
                   onTapDown: (_) {
                     categoryDetailNotifier.value =
-                        'カテゴリ: ${categoryTitles[imageInfo['category']]}';
+                        'カテゴリ: ${imageInfo['category']}';
                     appNameDetailNotifier.value =
                         '使用アプリ: ${imageInfo['app_name']}';
                   },

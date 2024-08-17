@@ -4,8 +4,6 @@ import 'package:stable_gallery/models/message.dart';
 import 'package:stable_gallery/models/navigation.dart';
 import 'package:stable_gallery/view/constants/inform_message.dart';
 import 'package:stable_gallery/view/museum/museum.dart';
-import '../constants/category_titles.dart';
-import '../constants/categories.dart';
 
 class MuseumView extends StatefulWidget {
   const MuseumView({super.key});
@@ -15,28 +13,33 @@ class MuseumView extends StatefulWidget {
 }
 
 class _MuseumViewState extends State<MuseumView> {
-  Map<String, List<String>> classifiedDriveIdss = {
-    'museum': [],
-    'music': [],
-    'other': [],
-    'restaurnt': [],
-    'smartphone': [],
-    'study': [],
-    'train': [],
-  };
-  Map<String, String> categoryIds = {
-    'museum': '',
-    'music': '',
-    'other': '',
-    'restaurnt': '',
-    'smartphone': '',
-    'study': '',
-    'train': '',
-  };
+  Map<String, List<String>> classifiedDriveIds = {};
+  Map<String, String> categoryIds = {};
+  Map<String, String> categoryTitles = {};
   bool isLoading = true;
 
-  getCategoryPath(String category) async {
-    await getCategoryId(category);
+  Future<void> fetchCategoriesFromFirebase() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('Category').get();
+
+    Map<String, String> tempCategoryIds = {};
+    Map<String, String> tempCategoryTitles = {};
+
+    for (var document in snapshot.docs) {
+      final data = document.data() as Map<String, dynamic>;
+      String categoryValue = data['value'] as String;
+
+      tempCategoryIds[categoryValue] = document.id;
+      tempCategoryTitles[categoryValue] = categoryValue;
+    }
+
+    setState(() {
+      categoryIds = tempCategoryIds;
+      categoryTitles = tempCategoryTitles;
+    });
+  }
+
+  Future<void> getCategoryPath(String category) async {
     List<String> driveIds = await FirebaseFirestore.instance
         .collection('Picture')
         .where('category_id', isEqualTo: categoryIds[category])
@@ -48,32 +51,21 @@ class _MuseumViewState extends State<MuseumView> {
       }).toList();
     });
     setState(() {
-      classifiedDriveIdss[category] = driveIds;
+      classifiedDriveIds[category] = driveIds;
     });
   }
 
-  getCategoryId(String category) async {
-    String categoryId = await FirebaseFirestore.instance
-        .collection('Category')
-        .where('name', isEqualTo: category)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      return snapshot.docs.first.id;
-    });
-    setState(() {
-      categoryIds[category] = categoryId;
-    });
-  }
-
-  void classifyCategory() async {
+  Future<void> classifyCategory() async {
     try {
-      for (var category in categories) {
+      await fetchCategoriesFromFirebase();
+      for (var category in categoryIds.keys) {
         await getCategoryPath(category);
       }
       setState(() {
         isLoading = false;
       });
     } catch (e) {
+      print(e);
       Message(message: errorMessage['databaseError'].toString())
           .informAction(context);
       const Navigation().moveHomePage(context);
@@ -98,29 +90,14 @@ class _MuseumViewState extends State<MuseumView> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: PageView(children: [
-                Museum(
-                    title: categoryTitles['museum'].toString(),
-                    driveIds: classifiedDriveIdss['museum']),
-                Museum(
-                    title: categoryTitles['music'].toString(),
-                    driveIds: classifiedDriveIdss['music']),
-                Museum(
-                    title: categoryTitles['restaurant'].toString(),
-                    driveIds: classifiedDriveIdss['restaurant']),
-                Museum(
-                    title: categoryTitles['smartphone'].toString(),
-                    driveIds: classifiedDriveIdss['smartphone']),
-                Museum(
-                    title: categoryTitles['study'].toString(),
-                    driveIds: classifiedDriveIdss['study']),
-                Museum(
-                    title: categoryTitles['train'].toString(),
-                    driveIds: classifiedDriveIdss['train']),
-                Museum(
-                    title: categoryTitles['other'].toString(),
-                    driveIds: classifiedDriveIdss['other']),
-              ]),
+              child: PageView(
+                children: categoryIds.keys.map((category) {
+                  return Museum(
+                    title: categoryTitles[category] ?? '',
+                    driveIds: classifiedDriveIds[category] ?? [],
+                  );
+                }).toList(),
+              ),
             ),
           );
   }
